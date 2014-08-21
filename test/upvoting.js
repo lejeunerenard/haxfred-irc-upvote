@@ -35,7 +35,7 @@ describe('Upvoting', function () {
       });
       it('detects if username doesnt start with space', function() {
         var message = 'thingbob	:+';
-        expect(helpers.detectUpvote(message, usernames)).to.be.ok;
+        expect(helpers.detectUpvote(message, usernames)).to.not.be.ok;
       });
    });
    describe('emit upvote event', function () {
