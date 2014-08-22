@@ -12,7 +12,9 @@
   "scripts": {
     "test": "mocha -w"
   },
-  "author": "lejeunerenard",
+  "author": {
+    "name": "lejeunerenard"
+  },
   "license": "GPL v2.0",
   "devDependencies": {
     "chai": "^1.9.1",
