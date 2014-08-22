@@ -1,8 +1,11 @@
 {
   "name": "haxfred-irc-upvoting",
-  "version": "0.0.0",
-  "description": "---",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Upvote module for IRC and Haxfred",
+  "repository": {
+    "url": "https://github.com/crookedneighbor/haxfred-irc-upvote"
+  },
+  "main": "./lib/haxfred-irc-upvote",
   "directories": {
     "test": "test"
   },
