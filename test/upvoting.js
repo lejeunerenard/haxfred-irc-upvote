@@ -86,7 +86,7 @@ describe('Upvoting', function () {
              from: 'alice',
              content: 'bob: +',
              response: '',
-             message: {content: 'hey', from: 'alice', args:['#foo']},
+             message: {content: 'bob: +', from: 'alice', args:['#foo']},
              onComplete: function() { }
           });
 
@@ -104,7 +104,7 @@ describe('Upvoting', function () {
              from: 'alice',
              content: 'alice: +',
              response: '',
-             message: {content: 'hey', from: 'alice', args:['#foo']},
+             message: {content: 'alice: +', from: 'alice', args:['#foo']},
              onComplete: function() { }
           });
      });  
