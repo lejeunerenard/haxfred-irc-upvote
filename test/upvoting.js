@@ -17,31 +17,31 @@ describe('Upvoting', function () {
 
       it('detects username followed by a "+"', function () {
         var message = 'bob+';
-        expect(helpers.matchUser(message, regex)).to.be.eq('bob');
+        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
       });
       it('detecs "username:" followed by a "+" ', function () {
         var message = 'bob:+';
-        expect(helpers.matchUser(message, regex)).to.be.eq('bob');
+        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
       });
       it('detecs "username:", space character followed by a "+" ', function(){
         var message = 'bob	:+';
-        expect(helpers.matchUser(message, regex)).to.be.eq('bob');
+        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
       });
       it('doesnt detect if there is anything between the username and "+"', function() {
         var message = 'bob	foo:+';
-        expect(helpers.matchUser(message, regex)).to.not.be.ok;
+        expect(helpers.detecUpvote(message, regex)).to.not.be.ok;
       });
       it('detects if username starts with space', function () {
         var message = 'things   bob	:+';
-        expect(helpers.matchUser(message, regex)).to.be.eq('bob');
+        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
       });
       it('detects if username doesnt start with space', function() {
         var message = 'thingbob	:+';
-        expect(helpers.matchUser(message, regex)).to.not.be.ok;
+        expect(helpers.detecUpvote(message, regex)).to.not.be.ok;
       });
       it('detects with space after ":" and before "+"', function () {
         var message = 'bob:  +';
-        expect(helpers.matchUser(message, regex)).to.be.eq('bob');
+        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
       });
    });
    describe('emit upvote event', function () {
