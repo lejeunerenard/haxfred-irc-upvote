@@ -1,6 +1,7 @@
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 var expect = require('chai').expect;
+var assert = require('chai').assert;
 var path = require('path');
 var chai = require('chai');
 
@@ -9,9 +10,30 @@ var upvote = require('../lib/haxfred-irc-upvote');
 var Haxfred = require('haxfred');
 
 chai.use(expect);
+chai.use(assert);
 chai.use(sinonChai);
 
+
 describe('Upvoting', function () {
+  // Setup haxfred for tests
+  var haxfred;
+  beforeEach(function() {
+    haxfred = new Haxfred({
+      adapters: ['../node_modules/haxfred-irc/lib/haxfred-irc.js', 'haxfred-irc-upvote.js'],
+      // Config is necessary to pass
+      // @TODO determine how to deal with lack of config
+      // haxfred-irc doesnt care if the server isnt defined.
+      // It probably shouldnt care about the rest of its config.
+      nicks: [ 'haxfred' ],
+      channels: [
+        '#foo'
+      ],
+      rootDir: path.resolve(__dirname, '../lib')
+    });
+
+    haxfred.initialize();
+  });
+
    describe('detectUpvote()', function () {
       var usernames = ['alice', 'bob', 'charlie'];
       var regex = helpers.detectUpvoteRegex(usernames);
@@ -49,22 +71,42 @@ describe('Upvoting', function () {
      // Since we dont really want to setup the irc module for a test
       var usernames = ['alice', 'bob', 'charlie'],
           channel = "#foo";
-      Haxfred.irc = {users: {}};
-      Haxfred.irc.users[channel] = usernames;
 
-     it('fires upvote event when upvote is detected from another user', function(){
-          Haxfred.emit('irc.msg', {
+     it('should emit an upvote event', function(done){
+          var upvoteSpy = sinon.spy();
+          setTimeout(function(){
+            assert(upvoteSpy.called, 'Upvote event did not fire.');
+            assert(upvoteSpy.calledOnce, 'Upvote fired more than once');
+            done();
+          }, 1000);
+          haxfred.on('irc.upvote', upvoteSpy);
+          
+          haxfred.irc.users[channel] = usernames;
+          haxfred.emit('irc.msg', {
              from: 'alice',
              content: 'bob: +',
              response: '',
-             message: {},
-             onComplete: function() {
-
-             }
+             message: {content: 'hey', from: 'alice', args:['#foo']},
+             onComplete: function() { }
           });
 
-          
      });
-     it('does not fire upvote event when upvote is detected from same user', function(){
-     });   });
+     it('does not fire upvote event when upvote is detected from same user', function(done){
+          var upvoteSpy = sinon.spy();
+          setTimeout(function(){
+            assert(!upvoteSpy.called, 'Upvote event did fire.');
+            done();
+          }, 1000);
+          haxfred.on('irc.upvote', upvoteSpy);
+
+          haxfred.irc.users[channel] = usernames;
+          haxfred.emit('irc.msg', {
+             from: 'alice',
+             content: 'alice: +',
+             response: '',
+             message: {content: 'hey', from: 'alice', args:['#foo']},
+             onComplete: function() { }
+          });
+     });  
+   });
 });
