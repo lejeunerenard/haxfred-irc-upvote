@@ -5,6 +5,7 @@ var path = require('path');
 var chai = require('chai');
 
 var helpers = require('../lib/helpers');
+var upvote = require('../lib/haxfred-irc-upvote');
 var Haxfred = require('haxfred');
 
 chai.use(expect);
@@ -17,31 +18,31 @@ describe('Upvoting', function () {
 
       it('detects username followed by a "+"', function () {
         var message = 'bob+';
-        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
+        expect(helpers.detectUpvote(message, regex)).to.be.eq('bob');
       });
       it('detecs "username:" followed by a "+" ', function () {
         var message = 'bob:+';
-        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
+        expect(helpers.detectUpvote(message, regex)).to.be.eq('bob');
       });
       it('detecs "username:", space character followed by a "+" ', function(){
         var message = 'bob	:+';
-        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
+        expect(helpers.detectUpvote(message, regex)).to.be.eq('bob');
       });
       it('doesnt detect if there is anything between the username and "+"', function() {
         var message = 'bob	foo:+';
-        expect(helpers.detecUpvote(message, regex)).to.not.be.ok;
+        expect(helpers.detectUpvote(message, regex)).to.not.be.ok;
       });
       it('detects if username starts with space', function () {
         var message = 'things   bob	:+';
-        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
+        expect(helpers.detectUpvote(message, regex)).to.be.eq('bob');
       });
       it('detects if username doesnt start with space', function() {
         var message = 'thingbob	:+';
-        expect(helpers.detecUpvote(message, regex)).to.not.be.ok;
+        expect(helpers.detectUpvote(message, regex)).to.not.be.ok;
       });
       it('detects with space after ":" and before "+"', function () {
         var message = 'bob:  +';
-        expect(helpers.detecUpvote(message, regex)).to.be.eq('bob');
+        expect(helpers.detectUpvote(message, regex)).to.be.eq('bob');
       });
    });
    describe('emit upvote event', function () {
@@ -51,7 +52,19 @@ describe('Upvoting', function () {
       Haxfred.irc = {users: {}};
       Haxfred.irc.users[channel] = usernames;
 
-     it('fires upvote event when upvote is detected from another user');
-     it('does not fire upvote event when upvote is detected from same user');
-   });
+     it('fires upvote event when upvote is detected from another user', function(){
+          Haxfred.emit('irc.msg', {
+             from: 'alice',
+             content: 'bob: +',
+             response: '',
+             message: {},
+             onComplete: function() {
+
+             }
+          });
+
+          
+     });
+     it('does not fire upvote event when upvote is detected from same user', function(){
+     });   });
 });
