@@ -13,7 +13,7 @@ chai.use(sinonChai);
 describe('Upvoting', function () {
    describe('detectUpvote()', function () {
       var usernames = ['alice', 'bob', 'charlie'];
-      var regex = helpers.usersRegex(usernames);
+      var regex = helpers.detectUpvoteRegex(usernames);
 
       it('detects username followed by a "+"', function () {
         var message = 'bob+';
