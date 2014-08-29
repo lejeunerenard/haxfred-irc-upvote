@@ -46,11 +46,11 @@ describe('Upvoting', function () {
    });
    describe('emit upvote event', function () {
      // Since we dont really want to setup the irc module for a test
-      var usernames = ['alice', 'bob', 'charlie'];
-      Haxfred.irc = {}
-      Haxfred.irc.users = function() {
-        return usernames;
-      }
+      var usernames = ['alice', 'bob', 'charlie'],
+          channel = "#foo";
+      Haxfred.irc = {users: {}};
+      Haxfred.irc.users[channel] = usernames;
+
      it('fires upvote event when upvote is detected from another user');
      it('does not fire upvote event when upvote is detected from same user');
    });
