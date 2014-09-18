@@ -16,6 +16,9 @@
     "name": "lejeunerenard"
   },
   "license": "GPL v2.0",
+  "dependencies": {
+    "haxfred-irc": "git://github.com/haxiom/haxfred-irc"
+  },
   "devDependencies": {
     "chai": "^1.9.1",
     "haxfred": "git://github.com/haxiom/haxfred#development",
