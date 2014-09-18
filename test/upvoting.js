@@ -42,11 +42,11 @@ describe('Upvoting', function () {
         var message = 'bob+';
         expect(helpers.detectUpvote(message, regex)).to.be.eq('bob');
       });
-      it('detecs "username:" followed by a "+" ', function () {
+      it('detects "username:" followed by a "+" ', function () {
         var message = 'bob:+';
         expect(helpers.detectUpvote(message, regex)).to.be.eq('bob');
       });
-      it('detecs "username:", space character followed by a "+" ', function(){
+      it('detects "username:", space character followed by a "+" ', function(){
         var message = 'bob	:+';
         expect(helpers.detectUpvote(message, regex)).to.be.eq('bob');
       });
@@ -58,7 +58,7 @@ describe('Upvoting', function () {
         var message = 'things   bob	:+';
         expect(helpers.detectUpvote(message, regex)).to.be.eq('bob');
       });
-      it('detects if username doesnt start with space', function() {
+      it('doesnt detects if username doesnt start with space', function() {
         var message = 'thingbob	:+';
         expect(helpers.detectUpvote(message, regex)).to.not.be.ok;
       });
@@ -75,12 +75,12 @@ describe('Upvoting', function () {
      it('should emit an upvote event', function(done){
           var upvoteSpy = sinon.spy();
           setTimeout(function(){
-            assert(upvoteSpy.called, 'Upvote event did not fire.');
-            assert(upvoteSpy.calledOnce, 'Upvote fired more than once');
+            expect(upvoteSpy.called).to.be.ok;
+            expect(upvoteSpy.calledOnce).to.be.ok;
             done();
-          }, 1000);
+          }, 100);
           haxfred.on('irc.upvote', upvoteSpy);
-          
+
           haxfred.irc.users[channel] = usernames;
           haxfred.emit('irc.msg', {
              from: 'alice',
@@ -89,14 +89,13 @@ describe('Upvoting', function () {
              message: {content: 'bob: +', from: 'alice', args:['#foo']},
              onComplete: function() { }
           });
-
      });
      it('does not fire upvote event when upvote is detected from same user', function(done){
           var upvoteSpy = sinon.spy();
           setTimeout(function(){
-            assert(!upvoteSpy.called, 'Upvote event did fire.');
+            expect(upvoteSpy.called).to.not.be.ok;
             done();
-          }, 1000);
+          }, 100);
           haxfred.on('irc.upvote', upvoteSpy);
 
           haxfred.irc.users[channel] = usernames;
@@ -107,6 +106,23 @@ describe('Upvoting', function () {
              message: {content: 'alice: +', from: 'alice', args:['#foo']},
              onComplete: function() { }
           });
-     });  
+     });
+     it('does not fire upvote event when message is not an upvote', function(done){
+          var upvoteSpy = sinon.spy();
+          setTimeout(function(){
+            expect(upvoteSpy.called).to.not.be.ok;
+            done();
+          }, 100);
+          haxfred.on('irc.upvote', upvoteSpy);
+
+          haxfred.irc.users[channel] = usernames;
+          haxfred.emit('irc.msg', {
+             from: 'alice',
+             content: 'bob is a cool dude',
+             response: '',
+             message: {content: 'bob is a cool dude', from: 'alice', args:['#foo']},
+             onComplete: function() { }
+          });
+     });
    });
 });
